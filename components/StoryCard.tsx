@@ -1,13 +1,15 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { StoryImage } from "@/components/StoryImage";
+import { orgStoryUrl } from "@/lib/links";
 import type { Story } from "@/lib/stories";
 
 export function StoryCard({ story }: { story: Story }) {
   return (
     <article className="group surface-card flex h-full flex-col overflow-hidden transition duration-200 hover:-translate-y-1 hover:shadow-lift">
-      <Link
-        href={`/stories/${story.slug}`}
+      <a
+        href={orgStoryUrl(story.slug)}
+        target="_blank"
+        rel="noopener noreferrer"
         className="flex h-full flex-col focus-visible:outline-none"
       >
         <div className="relative aspect-[8/5] overflow-hidden bg-slate-deep">
@@ -30,14 +32,14 @@ export function StoryCard({ story }: { story: Story }) {
             <span className="text-xs font-semibold uppercase tracking-eyebrow text-gold-deep">
               A Giver Army story
             </span>
-            <ArrowRight
+            <ArrowUpRight
               size={18}
-              className="text-gold-base transition-transform duration-200 group-hover:translate-x-1"
+              className="text-gold-base transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               aria-hidden
             />
           </div>
         </div>
-      </Link>
+      </a>
     </article>
   );
 }

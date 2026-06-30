@@ -1,16 +1,18 @@
-import Link from "next/link";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowUpRight, Play } from "lucide-react";
 import { StoryImage } from "@/components/StoryImage";
+import { orgStoryUrl } from "@/lib/links";
 import type { Story } from "@/lib/stories";
 
-/** Large lead/anchor story feature for the homepage. */
+/** Large lead/anchor story feature for the homepage. Links out to .org. */
 export function AnchorStory({ story }: { story: Story }) {
-  const href = `/stories/${story.slug}`;
+  const href = orgStoryUrl(story.slug);
   const hasVideo = Boolean(story.videoUrl);
   return (
     <article className="surface-card grid overflow-hidden lg:grid-cols-2">
-      <Link
+      <a
         href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         aria-label={story.title}
         className="group relative block min-h-[260px] bg-slate-deep lg:min-h-[420px]"
       >
@@ -30,7 +32,7 @@ export function AnchorStory({ story }: { story: Story }) {
             </span>
           </span>
         ) : null}
-      </Link>
+      </a>
 
       <div className="flex flex-col justify-center p-8 sm:p-10">
         <span className="text-xs font-bold uppercase tracking-eyebrow text-gold-deep">
@@ -54,17 +56,19 @@ export function AnchorStory({ story }: { story: Story }) {
           </p>
         ) : null}
         <div className="mt-6">
-          <Link
+          <a
             href={href}
+            target="_blank"
+            rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 text-sm font-bold text-gold-deep"
           >
-            Read the story
-            <ArrowRight
+            Read the full story
+            <ArrowUpRight
               size={16}
-              className="transition-transform group-hover:translate-x-1"
+              className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               aria-hidden
             />
-          </Link>
+          </a>
         </div>
       </div>
     </article>

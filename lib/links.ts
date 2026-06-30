@@ -40,3 +40,14 @@ export const links = {
 } as const;
 
 export const PRICE_LABEL = "$5/mo";
+
+/**
+ * Canonical story page on the GiveSendGo Charities site (.org). Story slugs map
+ * directly to /impact/<slug> there (e.g. operation-shelter, steve-and-dawn).
+ * Story cards link out to these pages.
+ */
+export const orgStoryUrl = (slug: string) =>
+  `${links.charity}/impact/${slug}`;
+
+/** The .org impact index (story library on givesendgo.org). */
+export const orgImpactIndex = `${links.charity}/impact`;
