@@ -22,8 +22,8 @@ type LogoProps = {
  *   variant="light" -> gold/white logo (for slate surfaces: hero, footer)
  */
 const LOGO_SRC: Record<"light" | "dark", string> = {
-  dark: "/logos/giver-army-horizontal-slate.svg",
-  light: "/logos/giver-army-horizontal-gold.svg",
+  dark: "/logos/giver-army-horizontal-slate.png",
+  light: "/logos/giver-army-horizontal-gold.png",
 };
 
 export function Logo({ variant = "dark", className }: LogoProps) {
