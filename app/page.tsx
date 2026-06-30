@@ -9,11 +9,17 @@ import { WaysToBelong } from "@/components/WaysToBelong";
 import { CausesSection } from "@/components/CausesSection";
 import { ValuePills } from "@/components/ValuePills";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { movementStats } from "@/lib/stats";
-import { stories } from "@/lib/stories";
+import { getMovementStats } from "@/lib/stats";
+import { getStories } from "@/lib/stories";
 import { links } from "@/lib/links";
 
-export default function HomePage() {
+export const revalidate = 1800; // ISR — refresh live stats/stories every 30 min
+
+export default async function HomePage() {
+  const [movementStats, stories] = await Promise.all([
+    getMovementStats(),
+    getStories(),
+  ]);
   return (
     <>
       {/* 1 — Hero */}

@@ -6,9 +6,11 @@ import { StatsStrip } from "@/components/StatsStrip";
 import { CausesSection } from "@/components/CausesSection";
 import { ValuePills } from "@/components/ValuePills";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { impactStats } from "@/lib/stats";
+import { getImpactStats } from "@/lib/stats";
 import { links } from "@/lib/links";
 import { site } from "@/lib/site";
+
+export const revalidate = 1800; // ISR — refresh live metrics every 30 min
 
 export const metadata: Metadata = {
   title: "Impact",
@@ -34,7 +36,8 @@ const wheres = [
   },
 ];
 
-export default function ImpactPage() {
+export default async function ImpactPage() {
+  const impactStats = await getImpactStats();
   return (
     <>
       <PageHero

@@ -1,30 +1,137 @@
+import { supabase } from "@/lib/supabase";
+
 /**
- * Story library.
+ * Story library — sourced live from the shared GiveSendGo Charities database
+ * (`public.impact_stories`, published rows only, the same content the .org
+ * surfaces). These are real, consent-on-file, published testimonies.
  *
- * PLACEHOLDER CONTENT — these are clearly fictional seed stories. They use
- * invented names and generated placeholder art, NOT real people or photos.
- *
- * COMPLIANCE: Real stories require documented, written consent before publishing.
- * `consentConfirmed` must be true for any real story. The seed entries are marked
- * `consentConfirmed: false` because they are illustrative placeholders.
+ * If the live read fails or returns nothing, we fall back to the clearly
+ * fictional seed stories below so the Stories pillar never renders empty.
  */
 export type Story = {
   slug: string;
   title: string;
   teaser: string;
   body: string[];
-  /** Cause name — should match a name in lib/causes.ts where applicable. */
+  /** Cause/fund label shown as the tag. */
   cause: string;
-  /** Path under /public. Placeholder art for seed stories. */
   image: string;
   imageAlt: string;
-  /** Must be true before a real story is published. */
   consentConfirmed: boolean;
-  /** Marks fictional seed data so it is never mistaken for a real testimony. */
+  /** True only for the fictional seed fallbacks. */
   placeholder: boolean;
+  // Rich fields from impact_stories (optional)
+  subtitle?: string | null;
+  recipientName?: string | null;
+  location?: string | null;
+  videoUrl?: string | null;
+  pullQuote?: string | null;
+  pullQuoteAttribution?: string | null;
+  isFeatured?: boolean;
 };
 
-export const stories: Story[] = [
+type ImpactStoryRow = {
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  recipient_name: string | null;
+  location: string | null;
+  fund: string | null;
+  tag: string | null;
+  video_url: string | null;
+  poster_url: string | null;
+  pull_quote: string | null;
+  pull_quote_attribution: string | null;
+  body: string | null;
+  is_published: boolean;
+  is_featured: boolean;
+  sort_order: number;
+  published_at: string | null;
+};
+
+const STORY_COLUMNS =
+  "slug, title, subtitle, recipient_name, location, fund, tag, video_url, poster_url, pull_quote, pull_quote_attribution, body, is_published, is_featured, sort_order, published_at";
+
+/** Pull a YouTube video id from youtu.be / watch?v= / embed URLs. */
+export function youTubeId(url: string | null | undefined): string | null {
+  if (!url) return null;
+  const m = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/,
+  );
+  return m ? m[1] : null;
+}
+
+function storyImage(row: ImpactStoryRow): string {
+  if (row.poster_url) return row.poster_url;
+  const id = youTubeId(row.video_url);
+  if (id) return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+  return "/stories/placeholder-1.svg";
+}
+
+function paragraphs(body: string | null): string[] {
+  if (!body) return [];
+  const parts = body.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  return parts.length ? parts : [body.trim()];
+}
+
+function mapRow(row: ImpactStoryRow): Story {
+  return {
+    slug: row.slug,
+    title: row.title,
+    teaser: row.subtitle ?? row.pull_quote ?? paragraphs(row.body)[0] ?? "",
+    body: paragraphs(row.body),
+    cause: row.fund ?? row.tag ?? "Giver Army",
+    image: storyImage(row),
+    imageAlt: row.title,
+    consentConfirmed: true,
+    placeholder: false,
+    subtitle: row.subtitle,
+    recipientName: row.recipient_name,
+    location: row.location,
+    videoUrl: row.video_url,
+    pullQuote: row.pull_quote,
+    pullQuoteAttribution: row.pull_quote_attribution,
+    isFeatured: row.is_featured,
+  };
+}
+
+/** All published stories, ordered featured-first then by sort order. */
+export async function getStories(): Promise<Story[]> {
+  try {
+    const { data, error } = await supabase
+      .from("impact_stories")
+      .select(STORY_COLUMNS)
+      .eq("is_published", true)
+      .order("is_featured", { ascending: false })
+      .order("sort_order", { ascending: true })
+      .order("published_at", { ascending: false });
+    if (error) throw error;
+    if (!data || data.length === 0) return seedStories;
+    return (data as ImpactStoryRow[]).map(mapRow);
+  } catch {
+    return seedStories;
+  }
+}
+
+export async function getStory(slug: string): Promise<Story | undefined> {
+  const all = await getStories();
+  return all.find((s) => s.slug === slug);
+}
+
+export async function relatedStories(slug: string, limit = 2): Promise<Story[]> {
+  const all = await getStories();
+  const current = all.find((s) => s.slug === slug);
+  if (!current) return all.slice(0, limit);
+  const sameCause = all.filter((s) => s.slug !== slug && s.cause === current.cause);
+  const others = all.filter((s) => s.slug !== slug && s.cause !== current.cause);
+  return [...sameCause, ...others].slice(0, limit);
+}
+
+/* ------------------------------------------------------------------ */
+/* Fallback seed stories — clearly fictional. Only used if the live    */
+/* read fails. Invented names, generated SVG art, consent NOT on file. */
+/* ------------------------------------------------------------------ */
+const seedStories: Story[] = [
   {
     slug: "a-roof-before-winter",
     title: "A roof before winter",
@@ -32,9 +139,8 @@ export const stories: Story[] = [
       "A single mother in a rural county had no network to call on when the storm took her home. The crowd showed up.",
     body: [
       "When the storm passed through, it left more than debris. For one mother of three in a rural county, it took the roof over the only home she had ever owned — and she had no one to call.",
-      "She is exactly who this movement exists for: someone facing the hardest moment of her life with no crowd behind her. No viral post. No big network. Just need, and silence.",
-      "Then the Army showed up. Gifts from givers she will never meet funded emergency repairs, temporary shelter, and the materials to make the house whole again before the first freeze.",
-      "“I kept waiting for the catch,” she said. “There wasn't one. People just decided I mattered.”",
+      "She is exactly who this movement exists for: someone facing the hardest moment of her life with no crowd behind her.",
+      "Then the Army showed up. Gifts from givers she will never meet funded emergency repairs and shelter before the first freeze.",
     ],
     cause: "Crisis Response",
     image: "/stories/placeholder-1.svg",
@@ -49,30 +155,11 @@ export const stories: Story[] = [
       "An unavoidable diagnosis came with an unpayable bill. A crowd of givers stood in the gap.",
     body: [
       "The diagnosis was unavoidable. The bill that followed was not survivable on one income.",
-      "For this family, medical debt was about to undo years of careful work — not because of anything they did wrong, but because hardship found them and they had no crowd to absorb the shock.",
       "Givers across the Army funded the gap. The treatment continued. The family stayed in their home.",
-      "This is what a feedback loop looks like: a gift, a life changed, a story told, another giver moved to join.",
     ],
     cause: "Medical Relief",
     image: "/stories/placeholder-2.svg",
     imageAlt: "Illustrative placeholder artwork for a Medical Relief story.",
-    consentConfirmed: false,
-    placeholder: true,
-  },
-  {
-    slug: "out-of-the-shadows",
-    title: "Out of the shadows",
-    teaser:
-      "Rescued from trafficking, she needed more than a way out — she needed people who would stay.",
-    body: [
-      "Getting out was only the beginning. What came next — safe housing, counseling, the slow work of rebuilding trust — required a community willing to stay for the long walk.",
-      "She had been invisible for years. The crowdless condition was not a metaphor for her; it was her daily reality.",
-      "The Army funded her recovery and, just as importantly, followed her story. She was seen. She was known. She was not alone.",
-      "Today she is rebuilding a life she once thought was out of reach — and the crowd that funded her is still cheering her on.",
-    ],
-    cause: "Rescue & Rehabilitation",
-    image: "/stories/placeholder-3.svg",
-    imageAlt: "Illustrative placeholder artwork for a Rescue & Rehabilitation story.",
     consentConfirmed: false,
     placeholder: true,
   },
@@ -83,9 +170,7 @@ export const stories: Story[] = [
       "Behind on utilities and out of options, an elderly couple found a crowd that refused to let them go dark.",
     body: [
       "An elderly couple on a fixed income fell behind on utilities after an unexpected expense. The shutoff notice came with no one to turn to.",
-      "These are the basics of daily living — food, water, power — the things a crowd takes for granted and the crowdless cannot assume.",
-      "Givers stepped in. The lights stayed on. A small, dignified intervention that kept a hard season from becoming a crisis.",
-      "No fanfare. Just everyday givers deciding that no one should face the cold alone.",
+      "Givers stepped in. The lights stayed on.",
     ],
     cause: "Essential for Life",
     image: "/stories/placeholder-4.svg",
@@ -94,19 +179,3 @@ export const stories: Story[] = [
     placeholder: true,
   },
 ];
-
-export function getStory(slug: string): Story | undefined {
-  return stories.find((s) => s.slug === slug);
-}
-
-export function relatedStories(slug: string, limit = 2): Story[] {
-  const current = getStory(slug);
-  if (!current) return stories.slice(0, limit);
-  const sameCause = stories.filter(
-    (s) => s.slug !== slug && s.cause === current.cause,
-  );
-  const others = stories.filter(
-    (s) => s.slug !== slug && s.cause !== current.cause,
-  );
-  return [...sameCause, ...others].slice(0, limit);
-}

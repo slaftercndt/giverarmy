@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { StoryImage } from "@/components/StoryImage";
 import type { Story } from "@/lib/stories";
 
 export function StoryCard({ story }: { story: Story }) {
@@ -11,10 +11,9 @@ export function StoryCard({ story }: { story: Story }) {
         className="flex h-full flex-col focus-visible:outline-none"
       >
         <div className="relative aspect-[8/5] overflow-hidden bg-slate-deep">
-          <Image
+          <StoryImage
             src={story.image}
             alt={story.imageAlt}
-            fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition duration-300 group-hover:scale-[1.03]"
           />

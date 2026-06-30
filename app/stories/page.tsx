@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui";
 import { StoriesBrowser } from "@/components/StoriesBrowser";
-import { stories } from "@/lib/stories";
+import { getStories } from "@/lib/stories";
+
+export const revalidate = 1800;
 
 export const metadata: Metadata = {
   title: "Stories",
@@ -10,7 +12,8 @@ export const metadata: Metadata = {
     "Real receipts. Real lives. Real hope. The Giver Army story library — testimonies of the crowdless finding a crowd, filterable by cause.",
 };
 
-export default function StoriesPage() {
+export default async function StoriesPage() {
+  const stories = await getStories();
   return (
     <>
       <PageHero

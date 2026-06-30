@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
-import { stories } from "@/lib/stories";
+import { getStories } from "@/lib/stories";
 
-export const dynamic = "force-static";
+export const revalidate = 1800;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const stories = await getStories();
   const routes = ["", "/movement", "/stories", "/impact", "/multiply", "/about"];
   const base = routes.map((path) => ({
     url: `${site.url}${path}`,

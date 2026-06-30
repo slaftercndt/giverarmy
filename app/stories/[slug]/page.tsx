@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Container, CTA } from "@/components/ui";
 import { StoryCard } from "@/components/StoryCard";
-import { getStory, relatedStories, stories } from "@/lib/stories";
+import { StoryImage } from "@/components/StoryImage";
+import { getStories, getStory, relatedStories, youTubeId } from "@/lib/stories";
 import { links } from "@/lib/links";
 
 type Params = { params: { slug: string } };
 
-export function generateStaticParams() {
+export const revalidate = 1800;
+
+export async function generateStaticParams() {
+  const stories = await getStories();
   return stories.map((s) => ({ slug: s.slug }));
 }
 
-export function generateMetadata({ params }: Params): Metadata {
-  const story = getStory(params.slug);
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const story = await getStory(params.slug);
   if (!story) return { title: "Story not found" };
   return {
     title: story.title,
@@ -28,20 +31,20 @@ export function generateMetadata({ params }: Params): Metadata {
   };
 }
 
-export default function StoryPage({ params }: Params) {
-  const story = getStory(params.slug);
+export default async function StoryPage({ params }: Params) {
+  const story = await getStory(params.slug);
   if (!story) notFound();
 
-  const related = relatedStories(story.slug, 2);
+  const related = await relatedStories(story.slug, 2);
+  const ytId = youTubeId(story.videoUrl);
 
   return (
     <article className="bg-cream-warm pb-20">
       {/* Hero image */}
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-deep sm:aspect-[21/9]">
-        <Image
+        <StoryImage
           src={story.image}
           alt={story.imageAlt}
-          fill
           priority
           sizes="100vw"
           className="object-cover"
@@ -67,6 +70,9 @@ export default function StoryPage({ params }: Params) {
             <h1 className="display mt-4 text-3xl text-slate-ink sm:text-5xl">
               {story.title}
             </h1>
+            {story.subtitle ? (
+              <p className="mt-2 text-lg text-slate-400">{story.subtitle}</p>
+            ) : null}
             <p className="mt-3 text-sm font-semibold uppercase tracking-eyebrow text-gold-deep">
               A Giver Army story
             </p>
@@ -78,11 +84,43 @@ export default function StoryPage({ params }: Params) {
               </p>
             ) : null}
 
-            <div className="mt-8 space-y-5 text-lg leading-body text-slate-base">
-              {story.body.map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
-            </div>
+            {/* Video embed (real stories are video-first) */}
+            {ytId ? (
+              <div className="mt-8 overflow-hidden rounded-card bg-slate-ink">
+                <div className="relative aspect-video">
+                  <iframe
+                    className="absolute inset-0 h-full w-full"
+                    src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+                    title={story.title}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            ) : null}
+
+            {/* Pull quote */}
+            {story.pullQuote ? (
+              <figure className="mt-8 border-l-4 border-gold-base pl-5">
+                <blockquote className="heading text-xl text-slate-ink sm:text-2xl">
+                  “{story.pullQuote}”
+                </blockquote>
+                {story.pullQuoteAttribution ? (
+                  <figcaption className="mt-3 text-sm font-semibold text-gold-deep">
+                    {story.pullQuoteAttribution}
+                  </figcaption>
+                ) : null}
+              </figure>
+            ) : null}
+
+            {story.body.length > 0 ? (
+              <div className="mt-8 space-y-5 text-lg leading-body text-slate-base">
+                {story.body.map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
+              </div>
+            ) : null}
 
             {/* Give CTA */}
             <div className="mt-10 rounded-card bg-slate-ink p-7 text-center sm:p-9">
