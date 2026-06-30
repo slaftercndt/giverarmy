@@ -37,6 +37,20 @@ npm run preview
 
 ---
 
+## Domains & the giver.army → giverarmy.com plan
+
+The canonical URL is controlled by `NEXT_PUBLIC_SITE_URL` (see `lib/site.ts`),
+which drives metadata, OpenGraph, canonical tags, sitemap, and robots.
+
+- **Now:** `giver.army` serves as the main site and is canonical (the default).
+- **Later flip:** when `giverarmy.com` becomes primary, set
+  `NEXT_PUBLIC_SITE_URL=https://giverarmy.com` in Vercel **and** turn on the
+  `giver.army → giverarmy.com` 301 redirect (Vercel → Project → Domains → set
+  `giverarmy.com` primary, redirect `giver.army` to it). No code change needed.
+
+Vercel domain setup today: attach both `giver.army` and `giverarmy.com` to the
+project, with `giver.army` as the primary serving domain.
+
 ## Where the content lives
 
 All content is centralized so it can be edited without touching components:

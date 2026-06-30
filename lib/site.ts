@@ -1,10 +1,23 @@
 /**
  * Site-wide config: nav, entity statement, metadata defaults.
  */
+
+/**
+ * Canonical base URL — drives metadataBase, OpenGraph, canonical tags,
+ * sitemap, and robots.
+ *
+ * Launch plan: giver.army serves as the main site first (canonical), then later
+ * 301-redirects to giverarmy.com. When that flip happens, set
+ * NEXT_PUBLIC_SITE_URL=https://giverarmy.com (and turn on the domain redirect in
+ * Vercel) — no code change needed.
+ */
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://giver.army";
+
 export const site = {
   name: "Giver Army",
-  domain: "giverarmy.com",
-  url: "https://www.giverarmy.com",
+  /** The hostname of the canonical URL above (no scheme). */
+  domain: SITE_URL.replace(/^https?:\/\//, ""),
+  url: SITE_URL,
   tagline: "A Crowd for the Crowdless",
   description:
     "Some people in need have no crowd. Giver Army is a movement of everyday givers who fund them, follow their stories, and share the hope of Jesus through generosity — so no one faces their hardest moment alone.",
