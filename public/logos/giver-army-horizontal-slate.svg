@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64" width="300" height="64" role="img" aria-label="Giver Army">
+  <!-- PLACEHOLDER LOGO — winged emblem + wordmark. Replace with official brand asset. -->
+  <g fill="#383F41">
+    <!-- central burst -->
+    <path d="M40 14 L46 30 L40 50 L34 30 Z"/>
+    <!-- right wing -->
+    <path d="M48 26 C 60 20 70 22 78 30 C 68 33 58 32 50 36 Z" opacity="0.9"/>
+    <path d="M48 34 C 58 30 66 31 72 37 C 64 39 56 39 50 42 Z" opacity="0.7"/>
+    <!-- left wing -->
+    <path d="M32 26 C 20 20 10 22 2 30 C 12 33 22 32 30 36 Z" opacity="0.9"/>
+    <path d="M32 34 C 22 30 14 31 8 37 C 16 39 24 39 30 42 Z" opacity="0.7"/>
+  </g>
+  <text x="92" y="40" font-family="Inter, sans-serif" font-weight="900" font-size="26" letter-spacing="-0.5" fill="#383F41">GIVER</text>
+  <text x="180" y="40" font-family="Inter, sans-serif" font-weight="500" font-size="26" letter-spacing="2" fill="#B38E3D">ARMY</text>
+</svg>

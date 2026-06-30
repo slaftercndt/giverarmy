@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" role="img" aria-label="Placeholder story artwork">
+  <defs>
+    <linearGradient id="g4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#383F41"/>
+      <stop offset="1" stop-color="#262A2B"/>
+    </linearGradient>
+    <radialGradient id="r4" cx="0.5" cy="0.42" r="0.6">
+      <stop offset="0" stop-color="#D2BC72" stop-opacity="0.40"/>
+      <stop offset="0.5" stop-color="#D2BC72" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#262A2B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#g4)"/>
+  <rect width="800" height="500" fill="url(#r4)"/>
+  <g fill="none" stroke="#D2BC72" stroke-opacity="0.55" stroke-width="6" stroke-linecap="round">
+    <path d="M400 150 L400 320"/>
+    <path d="M400 200 C 340 170 300 180 270 220 C 320 235 360 230 400 250"/>
+    <path d="M400 200 C 460 170 500 180 530 220 C 480 235 440 230 400 250"/>
+    <path d="M400 250 C 350 230 320 240 300 275 C 345 285 375 280 400 295"/>
+    <path d="M400 250 C 450 230 480 240 500 275 C 455 285 425 280 400 295"/>
+  </g>
+</svg>

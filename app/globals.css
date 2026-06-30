@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Account for the sticky header when jumping to in-page anchors. */
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-cream-warm text-slate-base antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Headings inherit display/heading tracking via utility classes; defaults here. */
+  h1, h2, h3 {
+    @apply text-balance;
+  }
+
+  /* Visible, branded keyboard focus everywhere. */
+  :focus-visible {
+    outline: 3px solid #b38e3d;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Respect reduced-motion: kill smooth scroll and animations. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Hide scrollbar on the carousel track while keeping it scrollable. */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Typographic primitives ---------------------------------------------- */
+  .display {
+    @apply font-sans font-black tracking-display leading-display;
+  }
+  .heading {
+    @apply font-sans font-extrabold tracking-heading;
+  }
+
+  /* Buttons ------------------------------------------------------------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-pill
+      px-6 py-3 text-[0.95rem] font-semibold transition
+      focus-visible:outline-none;
+  }
+  .btn-gold {
+    @apply btn bg-gold-base text-slate-ink shadow-gold hover:bg-gold-bright
+      active:translate-y-px;
+  }
+  .btn-ghost {
+    @apply btn border border-cool-200 bg-white text-slate-base
+      hover:border-gold-base hover:text-gold-deep;
+  }
+  .btn-ghost-dark {
+    @apply btn border border-white/50 bg-white/5 text-white
+      hover:border-gold-bright hover:bg-white/10 hover:text-gold-bright;
+  }
+
+  /* Eyebrow label with a short gold rule -------------------------------- */
+  .eyebrow {
+    @apply inline-flex items-center gap-3 text-[0.72rem] font-bold uppercase
+      tracking-eyebrow text-gold-deep;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply inline-block h-px w-8 bg-gold-base;
+  }
+
+  /* Cards --------------------------------------------------------------- */
+  .surface-card {
+    @apply rounded-card border border-cool-100 bg-white shadow-card;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    @apply mx-auto w-full max-w-container px-5 sm:px-6 lg:px-8;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" width="160" height="140" role="img" aria-label="Giver Army">
+  <!-- PLACEHOLDER LOGO — vertical lockup. Replace with official brand asset. -->
+  <g fill="#383F41" transform="translate(40,8)">
+    <path d="M40 8 L48 34 L40 66 L32 34 Z"/>
+    <path d="M50 28 C 66 20 78 23 90 34 C 76 38 62 37 52 42 Z" opacity="0.9"/>
+    <path d="M50 38 C 64 33 74 35 82 43 C 70 46 60 46 52 49 Z" opacity="0.7"/>
+    <path d="M30 28 C 14 20 2 23 -10 34 C 4 38 18 37 28 42 Z" opacity="0.9"/>
+    <path d="M30 38 C 16 33 6 35 -2 43 C 10 46 20 46 28 49 Z" opacity="0.7"/>
+  </g>
+  <text x="80" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-weight="900" font-size="24" letter-spacing="-0.5" fill="#383F41">GIVER</text>
+  <text x="80" y="132" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="20" letter-spacing="6" fill="#B38E3D">ARMY</text>
+</svg>
