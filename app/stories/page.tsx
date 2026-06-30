@@ -2,18 +2,15 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui";
 import { StoriesBrowser } from "@/components/StoriesBrowser";
-import { getStories } from "@/lib/stories";
-
-export const revalidate = 1800;
+import { featuredStories } from "@/lib/stories";
 
 export const metadata: Metadata = {
   title: "Stories",
   description:
-    "Real receipts. Real lives. Real hope. The Giver Army story library — testimonies of the crowdless finding a crowd, filterable by cause.",
+    "Real receipts. Real lives. Real hope. Video testimonies of the crowdless finding a crowd, filterable by cause.",
 };
 
-export default async function StoriesPage() {
-  const stories = await getStories();
+export default function StoriesPage() {
   return (
     <>
       <PageHero
@@ -23,7 +20,7 @@ export default async function StoriesPage() {
       />
       <section className="bg-cream-warm py-16 sm:py-20">
         <Container>
-          <StoriesBrowser stories={stories} />
+          <StoriesBrowser stories={featuredStories} />
         </Container>
       </section>
     </>

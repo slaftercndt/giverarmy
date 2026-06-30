@@ -7,7 +7,7 @@ import type { Story } from "@/lib/stories";
 /** Filterable story index. Filtering is client-side over the seeded list. */
 export function StoriesBrowser({ stories }: { stories: Story[] }) {
   const causes = useMemo(() => {
-    const set = new Set(stories.map((s) => s.cause));
+    const set = new Set(stories.map((s) => s.cause).filter(Boolean));
     return ["All", ...Array.from(set).sort()];
   }, [stories]);
 
@@ -18,13 +18,6 @@ export function StoriesBrowser({ stories }: { stories: Story[] }) {
 
   return (
     <div>
-      {/* Placeholder content notice (seed data is fictional) */}
-      <p className="mb-6 rounded-lg border border-gold-tint bg-gold-tint3/50 px-4 py-3 text-sm text-slate-base">
-        These are illustrative placeholder stories with fictional names and
-        generated art. Real testimonies are published only with documented
-        consent.
-      </p>
-
       <div
         className="flex flex-wrap gap-2"
         role="group"

@@ -1,15 +1,16 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Play } from "lucide-react";
 import { StoryImage } from "@/components/StoryImage";
-import { orgStoryUrl } from "@/lib/links";
 import type { Story } from "@/lib/stories";
 
 export function StoryCard({ story }: { story: Story }) {
+  const hasVideo = Boolean(story.videoUrl);
   return (
     <article className="group surface-card flex h-full flex-col overflow-hidden transition duration-200 hover:-translate-y-1 hover:shadow-lift">
       <a
-        href={orgStoryUrl(story.slug)}
-        target="_blank"
-        rel="noopener noreferrer"
+        href={story.href}
+        {...(story.external
+          ? { target: "_blank", rel: "noopener noreferrer" }
+          : {})}
         className="flex h-full flex-col focus-visible:outline-none"
       >
         <div className="relative aspect-[8/5] overflow-hidden bg-slate-deep">
@@ -19,9 +20,18 @@ export function StoryCard({ story }: { story: Story }) {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition duration-300 group-hover:scale-[1.03]"
           />
-          <span className="absolute left-4 top-4 rounded-pill bg-slate-ink/85 px-3 py-1 text-xs font-semibold text-gold-bright backdrop-blur">
-            {story.cause}
-          </span>
+          {story.cause ? (
+            <span className="absolute left-4 top-4 rounded-pill bg-slate-ink/85 px-3 py-1 text-xs font-semibold text-gold-bright backdrop-blur">
+              {story.cause}
+            </span>
+          ) : null}
+          {hasVideo ? (
+            <span className="absolute inset-0 flex items-center justify-center">
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-slate-ink/70 text-white backdrop-blur transition group-hover:bg-gold-base group-hover:text-slate-ink">
+                <Play size={20} className="ml-0.5" aria-hidden />
+              </span>
+            </span>
+          ) : null}
         </div>
         <div className="flex flex-1 flex-col p-6">
           <h3 className="heading text-xl text-slate-ink">{story.title}</h3>

@@ -10,17 +10,9 @@ export const visionSection = {
 };
 
 /**
- * The vision / about films shown below the hero fold. `title` is the iframe's
- * accessibility label (not visible text), so generic titles are fine.
+ * The vision / about film(s) shown below the hero fold. `title` is the iframe's
+ * accessibility label (not visible text).
  */
 export const visionVideos = [
   { youtubeId: "DspwwX7RM4E", title: "Giver Army — the vision" },
-  { youtubeId: "Sf5kcw08b8k", title: "Giver Army — the story" },
 ];
-
-/**
- * The anchor (lead) story slug. Featured large on the homepage and ordered
- * first in the story library. Set here in the giverarmy code rather than via
- * the shared database `is_featured` flag, which also drives givesendgo.org.
- */
-export const ANCHOR_STORY_SLUG = "operation-shelter";

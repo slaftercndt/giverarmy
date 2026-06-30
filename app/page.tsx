@@ -12,16 +12,15 @@ import { CausesSection } from "@/components/CausesSection";
 import { ValuePills } from "@/components/ValuePills";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { getMovementStats } from "@/lib/stats";
-import { getAnchorAndRest } from "@/lib/stories";
+import { anchorStory, secondaryStories } from "@/lib/stories";
 import { links } from "@/lib/links";
 
-export const revalidate = 1800; // ISR — refresh live stats/stories every 30 min
+export const revalidate = 1800; // ISR — refresh live stats every 30 min
 
 export default async function HomePage() {
-  const [movementStats, { anchor, rest }] = await Promise.all([
-    getMovementStats(),
-    getAnchorAndRest(),
-  ]);
+  const movementStats = await getMovementStats();
+  const anchor = anchorStory;
+  const rest = secondaryStories;
   return (
     <>
       {/* 1 — Hero */}

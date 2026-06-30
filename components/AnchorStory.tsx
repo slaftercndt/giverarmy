@@ -1,18 +1,20 @@
-import { ArrowUpRight, Play } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Play } from "lucide-react";
 import { StoryImage } from "@/components/StoryImage";
-import { orgStoryUrl } from "@/lib/links";
 import type { Story } from "@/lib/stories";
 
-/** Large lead/anchor story feature for the homepage. Links out to .org. */
+/** Large lead/anchor story feature for the homepage. */
 export function AnchorStory({ story }: { story: Story }) {
-  const href = orgStoryUrl(story.slug);
+  const href = story.href;
   const hasVideo = Boolean(story.videoUrl);
+  const linkRel = story.external
+    ? { target: "_blank", rel: "noopener noreferrer" }
+    : {};
+  const Arrow = story.external ? ArrowUpRight : ArrowRight;
   return (
     <article className="surface-card grid overflow-hidden lg:grid-cols-2">
       <a
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
+        {...linkRel}
         aria-label={story.title}
         className="group relative block min-h-[260px] bg-slate-deep lg:min-h-[420px]"
       >
@@ -22,9 +24,11 @@ export function AnchorStory({ story }: { story: Story }) {
           sizes="(max-width: 1024px) 100vw, 50vw"
           className="object-cover transition duration-300 group-hover:scale-[1.03]"
         />
-        <span className="absolute left-4 top-4 rounded-pill bg-slate-ink/85 px-3 py-1 text-xs font-semibold text-gold-bright backdrop-blur">
-          {story.cause}
-        </span>
+        {story.cause ? (
+          <span className="absolute left-4 top-4 rounded-pill bg-slate-ink/85 px-3 py-1 text-xs font-semibold text-gold-bright backdrop-blur">
+            {story.cause}
+          </span>
+        ) : null}
         {hasVideo ? (
           <span className="absolute inset-0 flex items-center justify-center">
             <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-slate-ink/70 text-white backdrop-blur transition group-hover:bg-gold-base group-hover:text-slate-ink">
@@ -58,12 +62,11 @@ export function AnchorStory({ story }: { story: Story }) {
         <div className="mt-6">
           <a
             href={href}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...linkRel}
             className="group inline-flex items-center gap-2 text-sm font-bold text-gold-deep"
           >
             Read the full story
-            <ArrowUpRight
+            <Arrow
               size={16}
               className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               aria-hidden
