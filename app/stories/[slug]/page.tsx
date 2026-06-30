@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Container, CTA } from "@/components/ui";
 import { StoryCard } from "@/components/StoryCard";
 import { StoryImage } from "@/components/StoryImage";
+import { YouTubeEmbed } from "@/components/YouTubeEmbed";
 import { getStories, getStory, relatedStories, youTubeId } from "@/lib/stories";
 import { links } from "@/lib/links";
 
@@ -86,18 +87,7 @@ export default async function StoryPage({ params }: Params) {
 
             {/* Video embed (real stories are video-first) */}
             {ytId ? (
-              <div className="mt-8 overflow-hidden rounded-card bg-slate-ink">
-                <div className="relative aspect-video">
-                  <iframe
-                    className="absolute inset-0 h-full w-full"
-                    src={`https://www.youtube-nocookie.com/embed/${ytId}`}
-                    title={story.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  />
-                </div>
-              </div>
+              <YouTubeEmbed id={ytId} title={story.title} className="mt-8" />
             ) : null}
 
             {/* Pull quote */}

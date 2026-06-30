@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { ANCHOR_STORY_SLUG } from "@/lib/content";
 
 /**
  * Story library — sourced live from the shared GiveSendGo Charities database
@@ -95,7 +96,7 @@ function mapRow(row: ImpactStoryRow): Story {
   };
 }
 
-/** All published stories, ordered featured-first then by sort order. */
+/** All published stories — anchor first, then featured, then sort order. */
 export async function getStories(): Promise<Story[]> {
   try {
     const { data, error } = await supabase
@@ -107,10 +108,31 @@ export async function getStories(): Promise<Story[]> {
       .order("published_at", { ascending: false });
     if (error) throw error;
     if (!data || data.length === 0) return seedStories;
-    return (data as ImpactStoryRow[]).map(mapRow);
+    const mapped = (data as ImpactStoryRow[]).map(mapRow);
+    // Pin the anchor story to the front (stable for everything else).
+    return mapped
+      .map((s, i) => ({ s, i }))
+      .sort(
+        (a, b) =>
+          (a.s.slug === ANCHOR_STORY_SLUG ? -1 : 0) -
+            (b.s.slug === ANCHOR_STORY_SLUG ? -1 : 0) || a.i - b.i,
+      )
+      .map(({ s }) => s);
   } catch {
     return seedStories;
   }
+}
+
+/** Split the library into the anchor (lead) story and the rest. */
+export async function getAnchorAndRest(): Promise<{
+  anchor: Story | null;
+  rest: Story[];
+}> {
+  const all = await getStories();
+  if (all.length === 0) return { anchor: null, rest: [] };
+  const anchor = all.find((s) => s.slug === ANCHOR_STORY_SLUG) ?? all[0];
+  const rest = all.filter((s) => s.slug !== anchor.slug);
+  return { anchor, rest };
 }
 
 export async function getStory(slug: string): Promise<Story | undefined> {

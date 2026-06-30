@@ -4,26 +4,31 @@ import { Hero } from "@/components/Hero";
 import { Container, CTA, Eyebrow, SectionHeading } from "@/components/ui";
 import { StatsStrip } from "@/components/StatsStrip";
 import { StoryCard } from "@/components/StoryCard";
+import { AnchorStory } from "@/components/AnchorStory";
+import { VisionVideo } from "@/components/VisionVideo";
 import { HowItWorks } from "@/components/HowItWorks";
 import { WaysToBelong } from "@/components/WaysToBelong";
 import { CausesSection } from "@/components/CausesSection";
 import { ValuePills } from "@/components/ValuePills";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { getMovementStats } from "@/lib/stats";
-import { getStories } from "@/lib/stories";
+import { getAnchorAndRest } from "@/lib/stories";
 import { links } from "@/lib/links";
 
 export const revalidate = 1800; // ISR — refresh live stats/stories every 30 min
 
 export default async function HomePage() {
-  const [movementStats, stories] = await Promise.all([
+  const [movementStats, { anchor, rest }] = await Promise.all([
     getMovementStats(),
-    getStories(),
+    getAnchorAndRest(),
   ]);
   return (
     <>
       {/* 1 — Hero */}
       <Hero />
+
+      {/* 1b — Vision film, just below the fold */}
+      <VisionVideo />
 
       {/* 2 — The Movement */}
       <section className="bg-slate-base py-20 sm:py-24">
@@ -64,11 +69,18 @@ export default async function HomePage() {
               />
             </Link>
           </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {stories.slice(0, 3).map((story) => (
-              <StoryCard key={story.slug} story={story} />
-            ))}
-          </div>
+          {anchor ? (
+            <div className="mt-10">
+              <AnchorStory story={anchor} />
+            </div>
+          ) : null}
+          {rest.length > 0 ? (
+            <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {rest.slice(0, 3).map((story) => (
+                <StoryCard key={story.slug} story={story} />
+              ))}
+            </div>
+          ) : null}
         </Container>
       </section>
 
