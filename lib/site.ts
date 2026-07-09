@@ -1,3 +1,5 @@
+import { links } from "@/lib/links";
+
 /**
  * Site-wide config: nav, entity statement, metadata defaults.
  */
@@ -46,7 +48,9 @@ export const footerNav = {
     { label: "Multiply", href: "/multiply" },
   ],
   give: [
-    { label: "Join the Army", href: "/multiply" },
+    // Routes to the giving widget — never to /multiply.
+    { label: "Join the Army", href: links.join, external: true },
+    { label: "Give once", href: links.give, external: true },
     { label: "The 12 Causes", href: "/impact#causes" },
     { label: "Where your gift goes", href: "/impact#transparency" },
   ],

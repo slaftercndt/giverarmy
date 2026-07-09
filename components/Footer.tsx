@@ -80,8 +80,9 @@ function FooterCol({
   items,
 }: {
   title: string;
-  items: readonly { label: string; href: string }[];
+  items: readonly { label: string; href: string; external?: boolean }[];
 }) {
+  const linkClass = "text-sm text-cool-100 transition hover:text-gold-bright";
   return (
     <div>
       <h3 className="text-xs font-bold uppercase tracking-eyebrow text-gold-bright">
@@ -89,13 +90,21 @@ function FooterCol({
       </h3>
       <ul className="mt-4 space-y-2.5">
         {items.map((item) => (
-          <li key={item.href}>
-            <Link
-              href={item.href}
-              className="text-sm text-cool-100 transition hover:text-gold-bright"
-            >
-              {item.label}
-            </Link>
+          <li key={item.href + item.label}>
+            {item.external ? (
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={linkClass}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link href={item.href} className={linkClass}>
+                {item.label}
+              </Link>
+            )}
           </li>
         ))}
       </ul>

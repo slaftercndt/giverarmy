@@ -1,15 +1,14 @@
 import { supabase } from "@/lib/supabase";
 
 /**
- * Homepage / impact metrics — now sourced live from the shared GiveSendGo
- * Charities database (`public.stats`, the same table the .org reads).
+ * Homepage / impact metrics — sourced live from the shared GSGC database.
+ * Reads the `stats_latest` view when present, falling back to the most recent
+ * row of the `stats` table (both anon-readable under RLS).
  *
- * `stats` is a scraped time-series; we read the most recent row. Money columns
- * are stored in cents. If the live read fails, we fall back to clearly-marked
- * placeholders so the page never breaks.
- *
- * Labels reflect money *given through GiveSendGo* (not "granted"), to stay
- * accurate and within the entity-separation rules (see brief §2).
+ * Metric rules:
+ *  - Money labels say "given" (not "granted") per entity-separation rules.
+ *  - Gift activity is counted in GIFTS, never dollars and never "givers."
+ *  - Missing figures render as clearly-marked placeholders (—), never invented.
  */
 export type Stat = {
   value: string;
@@ -22,7 +21,8 @@ type StatsRow = {
   total_raised_cents: number | null;
   month_raised_cents: number | null;
   gift_count: number | null;
-  scraped_at: string;
+  /** Monthly gift count — read from whichever field the view exposes. */
+  month_gift_count: number | null;
 };
 
 function usd(cents: number | null | undefined): string {
@@ -39,17 +39,46 @@ function count(n: number | null | undefined): string {
   return new Intl.NumberFormat("en-US").format(n);
 }
 
+function toNumber(v: unknown): number | null {
+  return typeof v === "number" && Number.isFinite(v) ? v : null;
+}
+
+function normalize(row: Record<string, unknown>): StatsRow {
+  return {
+    total_raised_cents: toNumber(row.total_raised_cents),
+    month_raised_cents: toNumber(row.month_raised_cents),
+    gift_count: toNumber(row.gift_count),
+    month_gift_count:
+      toNumber(row.month_gift_count) ??
+      toNumber(row.gifts_this_month) ??
+      toNumber(row.month_gifts) ??
+      null,
+  };
+}
+
 async function latestStats(): Promise<StatsRow | null> {
   if (!supabase) return null;
+  // Preferred: the stats_latest view.
+  try {
+    const { data, error } = await supabase
+      .from("stats_latest")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
+    if (!error && data) return normalize(data);
+  } catch {
+    /* fall through to the base table */
+  }
+  // Fallback: newest row of the stats table.
   try {
     const { data, error } = await supabase
       .from("stats")
-      .select("total_raised_cents, month_raised_cents, gift_count, scraped_at")
+      .select("*")
       .order("scraped_at", { ascending: false })
       .limit(1)
       .maybeSingle();
-    if (error) throw error;
-    return data;
+    if (error || !data) return null;
+    return normalize(data);
   } catch {
     return null;
   }
@@ -69,18 +98,24 @@ async function publishedStoryCount(): Promise<number | null> {
   }
 }
 
+/** "Gifts this month · #x" — counts gifts, never dollars, never "givers." */
+function giftsThisMonthStat(s: StatsRow | null): Stat {
+  const n = s?.month_gift_count ?? null;
+  return {
+    value: n != null ? `#${count(n)}` : "#—",
+    label: "Gifts this month",
+    placeholder: n == null,
+  };
+}
+
 /** Live-stats strip on the homepage "Movement" section (4 stats). */
 export async function getMovementStats(): Promise<Stat[]> {
   const s = await latestStats();
   const live = s != null;
   return [
     { value: usd(s?.total_raised_cents), label: "Total given", placeholder: !live },
-    {
-      value: count(s?.gift_count),
-      label: "Gifts fueled by givers",
-      placeholder: !live,
-    },
-    { value: usd(s?.month_raised_cents), label: "Given this month", placeholder: !live },
+    { value: count(s?.gift_count), label: "Total gifts", placeholder: !live },
+    giftsThisMonthStat(s),
     { value: "12", label: "Cause categories", placeholder: false },
   ];
 }
@@ -98,12 +133,8 @@ export async function getImpactStats(): Promise<Stat[]> {
       : "—";
   return [
     { value: usd(s?.total_raised_cents), label: "Total given", placeholder: !live },
-    {
-      value: count(s?.gift_count),
-      label: "Gifts fueled by givers",
-      placeholder: !live,
-    },
-    { value: usd(s?.month_raised_cents), label: "Given this month", placeholder: !live },
+    { value: count(s?.gift_count), label: "Total gifts", placeholder: !live },
+    giftsThisMonthStat(s),
     { value: avg, label: "Average gift", placeholder: !live },
     {
       value: storyCount != null ? count(storyCount) : "—",
