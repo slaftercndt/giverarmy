@@ -14,7 +14,7 @@ import { championStories } from "@/lib/stories";
  * PLACEHOLDER SLOTS: until more champion stories are published, empty slots
  * render as clearly-marked "coming soon" tiles — no invented names or faces.
  */
-const PLACEHOLDER_SLOTS = 2;
+const PLACEHOLDER_SLOTS = 1;
 
 export function ChampionsBand() {
   return (
@@ -37,7 +37,7 @@ export function ChampionsBand() {
             >
               <span className="relative block h-16 w-16 overflow-hidden rounded-full bg-slate-deep">
                 <StoryImage
-                  src={story.image}
+                  src={story.championImage ?? story.image}
                   alt=""
                   sizes="64px"
                   className="object-cover"
@@ -46,9 +46,9 @@ export function ChampionsBand() {
               <span className="heading mt-4 text-lg text-slate-ink">
                 {story.recipientName ?? story.title}
               </span>
-              {story.location ? (
+              {story.championLabel ?? story.location ? (
                 <span className="mt-1 text-sm text-slate-400">
-                  {story.location}
+                  {story.championLabel ?? story.location}
                 </span>
               ) : null}
               <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-deep">

@@ -30,6 +30,10 @@ export type Story = {
    * flag planned for the shared testimonies table (see Block 4 notes).
    */
   champion?: boolean;
+  /** Headshot for the Rally-your-crowd band (falls back to `image`). */
+  championImage?: string;
+  /** Affiliation line under the champion's name (falls back to `location`). */
+  championLabel?: string;
   /** Full on-site page content. Omitted for external-only stories. */
   page?: {
     kicker: string;
@@ -71,6 +75,10 @@ export const featuredStories: Story[] = [
       "If it wasn't for GiveSendGo, people would have died up there. Heat, food, shelter — you guys saved lives. End of story. And I saw it with my own eyes.",
     href: "/stories/operation-shelter",
     external: false,
+    champion: true,
+    championLabel: "Here We Grow · Operation Shelter",
+    // TODO: set championImage: "/champions/shawn-hendrix.jpg" once the
+    // headshot is uploaded to public/champions/ — video thumbnail until then.
     page: {
       kicker: "Impact Report · Hurricane Helene",
       title: "Operation Shelter.",
