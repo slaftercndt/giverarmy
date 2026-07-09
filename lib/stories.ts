@@ -151,6 +151,21 @@ export const featuredStories: Story[] = [
     href: "https://youtu.be/Sf5kcw08b8k",
     external: true,
   },
+  {
+    slug: "cory-binks",
+    title: "Planting seeds. Watering seeds.",
+    teaser:
+      "“I see myself as a gardener. I am planting seeds and watering seeds.” Your generosity continues to meet urgent need — individuals, families, ministries, and causes — sharing the hope of Jesus through generosity.",
+    cause: "God-Did-It Movement",
+    image: ytThumb("8mJZ9auQPI4"),
+    imageAlt: "Cory Binks — God-Did-It Movement",
+    videoUrl: "https://www.youtube.com/watch?v=8mJZ9auQPI4",
+    recipientName: "Cory Binks",
+    location: "God-Did-It Movement",
+    pullQuote: "I see myself as a gardener. I am planting seeds and watering seeds.",
+    href: "https://www.youtube.com/watch?v=8mJZ9auQPI4",
+    external: true,
+  },
 ];
 
 export const anchorStory: Story = featuredStories[0];

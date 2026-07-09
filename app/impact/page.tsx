@@ -6,6 +6,7 @@ import { StatsStrip } from "@/components/StatsStrip";
 import { CausesSection } from "@/components/CausesSection";
 import { ValuePills } from "@/components/ValuePills";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { CandidBadge } from "@/components/CandidBadge";
 import { getImpactStats } from "@/lib/stats";
 import { links } from "@/lib/links";
 import { site } from "@/lib/site";
@@ -105,9 +106,7 @@ export default async function ImpactPage() {
         <Container>
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
             <div className="surface-card p-8 sm:p-10">
-              <span className="inline-flex w-fit items-center gap-2 rounded-pill bg-slate-ink px-4 py-1.5 text-xs font-bold uppercase tracking-eyebrow text-gold-bright">
-                Candid Platinum 2025
-              </span>
+              <CandidBadge />
               <h3 className="heading mt-5 text-2xl text-slate-ink">
                 Transparency, independently rated.
               </h3>

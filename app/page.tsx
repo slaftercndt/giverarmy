@@ -11,6 +11,7 @@ import { WaysToBelong } from "@/components/WaysToBelong";
 import { CausesSection } from "@/components/CausesSection";
 import { ValuePills } from "@/components/ValuePills";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { CandidBadge } from "@/components/CandidBadge";
 import { getMovementStats } from "@/lib/stats";
 import { anchorStory, secondaryStories } from "@/lib/stories";
 import { links } from "@/lib/links";
@@ -163,9 +164,7 @@ export default async function HomePage() {
 
             {/* Candid Platinum + Dispatch signup */}
             <div className="surface-card flex flex-col p-8 sm:p-10">
-              <span className="inline-flex w-fit items-center gap-2 rounded-pill bg-slate-ink px-4 py-1.5 text-xs font-bold uppercase tracking-eyebrow text-gold-bright">
-                Candid Platinum 2025
-              </span>
+              <CandidBadge />
               <h3 className="heading mt-5 text-2xl text-slate-ink">
                 Get the Giver Army Dispatch.
               </h3>
