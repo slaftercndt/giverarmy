@@ -23,6 +23,13 @@ export type Story = {
   /** Where the card links. Internal (/stories/<slug>) unless `external`. */
   href: string;
   external: boolean;
+  /**
+   * Champion flag — a fellow giver (influencer/artist/athlete) who rallied
+   * their crowd. Champions are GUIDES who tell the story of lives changed;
+   * they are never the hero and never paid endorsers. Mirrors the `champions`
+   * flag planned for the shared testimonies table (see Block 4 notes).
+   */
+  champion?: boolean;
   /** Full on-site page content. Omitted for external-only stories. */
   page?: {
     kicker: string;
@@ -165,8 +172,14 @@ export const featuredStories: Story[] = [
     pullQuote: "I see myself as a gardener. I am planting seeds and watering seeds.",
     href: "https://www.youtube.com/watch?v=8mJZ9auQPI4",
     external: true,
+    champion: true,
   },
 ];
+
+/** Champions — fellow givers who rallied their crowd. Links go to their STORY. */
+export const championStories: Story[] = featuredStories.filter(
+  (s) => s.champion,
+);
 
 export const anchorStory: Story = featuredStories[0];
 export const secondaryStories: Story[] = featuredStories.slice(1);

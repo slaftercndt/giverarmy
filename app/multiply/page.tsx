@@ -3,6 +3,7 @@ import { Church, Share2, Users, HandHeart } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Container, CTA, SectionHeading } from "@/components/ui";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { ChampionsBand } from "@/components/ChampionsBand";
 import { links, PRICE_LABEL } from "@/lib/links";
 
 export const metadata: Metadata = {
@@ -101,6 +102,9 @@ export default function MultiplyPage() {
           </div>
         </Container>
       </section>
+
+      {/* Rally your crowd — champions */}
+      <ChampionsBand />
 
       {/* Dispatch newsletter signup */}
       <section className="bg-slate-ink py-20 sm:py-24">

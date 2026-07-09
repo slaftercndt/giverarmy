@@ -5,7 +5,15 @@ export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Individual stories link out to givesendgo.org, so only our own pages here.
-  const routes = ["", "/movement", "/stories", "/impact", "/multiply", "/about"];
+  const routes = [
+    "",
+    "/movement",
+    "/stories",
+    "/impact",
+    "/multiply",
+    "/enlist-your-crowd",
+    "/about",
+  ];
   return routes.map((path) => ({
     url: `${site.url}${path}`,
     changeFrequency: "weekly" as const,
