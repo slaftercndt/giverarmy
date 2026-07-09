@@ -155,7 +155,7 @@ export default function MovementPage() {
             </div>
             <div className="flex flex-col gap-3">
               <CTA href={links.join} external variant="gold">
-                Join the Army — $5/mo
+                Join the Army — from $5/mo
               </CTA>
               <CTA href={links.charity} external variant="ghost-dark">
                 Learn about GiveSendGo Charities

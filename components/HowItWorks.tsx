@@ -4,7 +4,7 @@ const steps = [
   {
     n: "01",
     title: "Join the Army",
-    body: "Become a giver for $5 a month. Your gift joins thousands of others and flows to real need — to the people with no crowd of their own.",
+    body: "Enlist for as little as $5 a month. Your gift joins thousands of others and flows to real need — to the people with no crowd of their own.",
     Icon: Heart,
   },
   {

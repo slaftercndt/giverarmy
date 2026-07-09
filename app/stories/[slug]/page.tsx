@@ -11,7 +11,7 @@ import {
   relatedStories,
   youTubeId,
 } from "@/lib/stories";
-import { links } from "@/lib/links";
+import { links, PRICE_LABEL } from "@/lib/links";
 
 type Params = { params: { slug: string } };
 
@@ -138,12 +138,12 @@ export default function StoryPage({ params }: Params) {
               Be the crowd for the next story.
             </h2>
             <p className="mx-auto mt-3 max-w-md text-sm leading-body text-cool-100">
-              Your $5 a month funds people facing their hardest moment with no one
-              behind them.
+              From as little as $5 a month, you fund people facing their hardest
+              moment with no one behind them.
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <CTA href={links.join} external variant="gold">
-                Join the Army — $5/mo
+                Join the Army — {PRICE_LABEL}
               </CTA>
               <CTA href={links.give} external variant="ghost-dark">
                 Give once

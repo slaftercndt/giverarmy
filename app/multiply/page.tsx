@@ -24,7 +24,7 @@ const ways = [
   },
   {
     title: "Recruit",
-    body: "Invite a friend to enlist for $5 a month. Two givers become four; four become a movement. Recruiting is how the crowd outgrows the need.",
+    body: "Invite a friend to enlist for as little as $5 a month. Two givers become four; four become a movement. Recruiting is how the crowd outgrows the need.",
     Icon: Users,
   },
 ];

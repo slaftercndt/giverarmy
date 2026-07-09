@@ -12,9 +12,12 @@
  * Swap these placeholder hrefs for production URLs in one place.
  */
 export const links = {
-  // Donor / checkout actions → GiveSendGo Charities (the 501(c)(3))
-  join: "https://www.givesendgo.org/join", // Join the Army — $5/mo (placeholder)
-  give: "https://www.givesendgo.org/give", // Give once (placeholder)
+  // Donor / checkout actions → the GiveSendGo Charities giving widget.
+  // Widget presets are $25 / $50 / $125 plus a custom field with a $5.00
+  // minimum — $5/mo is the floor, not a preset or default. All "Join" CTAs
+  // must route here (never to /multiply).
+  join: "https://www.givesendgo.org/join", // giving widget (placeholder URL)
+  give: "https://www.givesendgo.org/give", // one-time gift (placeholder URL)
 
   // The charity / donor site
   charity: "https://www.givesendgo.org",
@@ -39,7 +42,15 @@ export const links = {
   },
 } as const;
 
-export const PRICE_LABEL = "$5/mo";
+/**
+ * Gift-amount messaging: $5/mo is the MINIMUM (custom-field floor), not the
+ * default. Widget presets are $25 / $50 / $125. Copy must anchor on the low
+ * barrier ("from $5/mo", "as little as $5 a month") and never imply $5 is the
+ * default gift.
+ */
+export const PRICE_LABEL = "from $5/mo";
+export const MIN_GIFT_PHRASE = "as little as $5 a month";
+export const GIFT_TIERS = [25, 50, 125] as const; // widget presets; custom min $5
 
 /**
  * Canonical story page on the GiveSendGo Charities site (.org). Story slugs map

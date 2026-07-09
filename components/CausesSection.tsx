@@ -15,7 +15,7 @@ export function CausesSection() {
           </h2>
           <p className="mt-4 text-lg leading-body text-cool-100">
             The Giver Army funds these cause categories. Choose where your
-            $5/month flows, or let it go where the need is greatest.
+            monthly gift flows, or let it go where the need is greatest.
           </p>
         </div>
 

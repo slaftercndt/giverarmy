@@ -24,7 +24,7 @@ const faqs = [
     a: "Gifts to GiveSendGo Charities, a 501(c)(3) public charity, are generally tax-deductible to the extent allowed by law. Consult your tax advisor for your specific situation.",
   },
   {
-    q: "What does the $5/month go toward?",
+    q: "What does my monthly gift go toward?",
     a: "Your monthly gift is pooled with thousands of others and granted across the 12 causes — funding the crowdless, the people facing hardship with no network of their own. You can choose where your gift flows or let it go where the need is greatest.",
   },
   {

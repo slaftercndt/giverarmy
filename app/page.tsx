@@ -196,7 +196,7 @@ export default async function HomePage() {
           </p>
           <div className="mt-9 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
             <CTA href={links.join} external variant="gold">
-              Join the Army — $5/mo
+              Join the Army — from $5/mo
             </CTA>
             <CTA href={links.give} external variant="ghost-dark">
               Give once
