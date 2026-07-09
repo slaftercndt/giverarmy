@@ -12,6 +12,7 @@ import { CausesSection } from "@/components/CausesSection";
 import { ValuePills } from "@/components/ValuePills";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { CandidBadge } from "@/components/CandidBadge";
+import { GiftInMotion } from "@/components/GiftInMotion";
 import { getMovementStats } from "@/lib/stats";
 import { anchorStory, secondaryStories } from "@/lib/stories";
 import { links } from "@/lib/links";
@@ -47,6 +48,9 @@ export default async function HomePage() {
           </div>
         </Container>
       </section>
+
+      {/* 2b — Your gift, in motion (live line) */}
+      <GiftInMotion />
 
       {/* 3 — Stories */}
       <section className="bg-cream-warm py-20 sm:py-24">
