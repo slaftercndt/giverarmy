@@ -40,6 +40,7 @@ function count(n: number | null | undefined): string {
 }
 
 async function latestStats(): Promise<StatsRow | null> {
+  if (!supabase) return null;
   try {
     const { data, error } = await supabase
       .from("stats")
@@ -55,6 +56,7 @@ async function latestStats(): Promise<StatsRow | null> {
 }
 
 async function publishedStoryCount(): Promise<number | null> {
+  if (!supabase) return null;
   try {
     const { count: c, error } = await supabase
       .from("impact_stories")
