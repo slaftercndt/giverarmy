@@ -42,9 +42,11 @@ export default async function HomePage() {
           />
           <div className="mt-10">
             <StatsStrip stats={movementStats} tone="light" columns={4} />
-            <p className="mt-4 text-xs text-cool-400">
-              Figures shown are placeholders pending verified reporting.
-            </p>
+            {movementStats.some((s) => s.placeholder) ? (
+              <p className="mt-4 text-xs text-cool-400">
+                Figures marked — are pending verified reporting.
+              </p>
+            ) : null}
           </div>
         </Container>
       </section>

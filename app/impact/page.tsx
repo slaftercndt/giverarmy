@@ -57,10 +57,12 @@ export default async function ImpactPage() {
           />
           <div className="mt-10">
             <StatsStrip stats={impactStats} tone="light" columns={6} />
-            <p className="mt-4 text-xs text-cool-400">
-              Figures shown are placeholders pending verified reporting (see our
-              transparency commitments below).
-            </p>
+            {impactStats.some((s) => s.placeholder) ? (
+              <p className="mt-4 text-xs text-cool-400">
+                Figures marked — are pending verified reporting (see our
+                transparency commitments below).
+              </p>
+            ) : null}
           </div>
         </Container>
       </section>

@@ -23,6 +23,7 @@ type StatsRow = {
   gift_count: number | null;
   /** Monthly gift count — read from whichever field the view exposes. */
   month_gift_count: number | null;
+  scraped_at: string | null;
 };
 
 function usd(cents: number | null | undefined): string {
@@ -53,7 +54,37 @@ function normalize(row: Record<string, unknown>): StatsRow {
       toNumber(row.gifts_this_month) ??
       toNumber(row.month_gifts) ??
       null,
+    scraped_at: typeof row.scraped_at === "string" ? row.scraped_at : null,
   };
+}
+
+/**
+ * Gifts this month, derived from the stats snapshot time-series:
+ * latest gift_count minus the last snapshot before the current (UTC) month
+ * began. Real data, not an estimate — the counter only ever increments.
+ * Used when the stats_latest view exposes no monthly gift-count field.
+ */
+async function deriveMonthGiftCount(latest: StatsRow): Promise<number | null> {
+  if (!supabase || latest.gift_count == null || !latest.scraped_at) return null;
+  const asOf = new Date(latest.scraped_at);
+  if (Number.isNaN(asOf.getTime())) return null;
+  const monthStart = new Date(
+    Date.UTC(asOf.getUTCFullYear(), asOf.getUTCMonth(), 1),
+  ).toISOString();
+  try {
+    const { data, error } = await supabase
+      .from("stats")
+      .select("gift_count")
+      .lt("scraped_at", monthStart)
+      .order("scraped_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error || data?.gift_count == null) return null;
+    const n = latest.gift_count - data.gift_count;
+    return n >= 0 ? n : null;
+  } catch {
+    return null;
+  }
 }
 
 async function latestStats(): Promise<StatsRow | null> {
@@ -99,8 +130,7 @@ async function publishedStoryCount(): Promise<number | null> {
 }
 
 /** "Gifts this month · #x" — counts gifts, never dollars, never "givers." */
-function giftsThisMonthStat(s: StatsRow | null): Stat {
-  const n = s?.month_gift_count ?? null;
+function giftsThisMonthStat(n: number | null): Stat {
   return {
     value: n != null ? `#${count(n)}` : "#—",
     label: "Gifts this month",
@@ -108,14 +138,21 @@ function giftsThisMonthStat(s: StatsRow | null): Stat {
   };
 }
 
+/** View field when present, else derived from the snapshot series. */
+async function monthGiftCount(s: StatsRow | null): Promise<number | null> {
+  if (!s) return null;
+  return s.month_gift_count ?? (await deriveMonthGiftCount(s));
+}
+
 /** Live-stats strip on the homepage "Movement" section (4 stats). */
 export async function getMovementStats(): Promise<Stat[]> {
   const s = await latestStats();
+  const monthly = await monthGiftCount(s);
   const live = s != null;
   return [
     { value: usd(s?.total_raised_cents), label: "Total given", placeholder: !live },
     { value: count(s?.gift_count), label: "Total gifts", placeholder: !live },
-    giftsThisMonthStat(s),
+    giftsThisMonthStat(monthly),
     { value: "12", label: "Cause categories", placeholder: false },
   ];
 }
@@ -126,6 +163,7 @@ export async function getImpactStats(): Promise<Stat[]> {
     latestStats(),
     publishedStoryCount(),
   ]);
+  const monthly = await monthGiftCount(s);
   const live = s != null;
   const avg =
     s?.total_raised_cents != null && s.gift_count
@@ -134,7 +172,7 @@ export async function getImpactStats(): Promise<Stat[]> {
   return [
     { value: usd(s?.total_raised_cents), label: "Total given", placeholder: !live },
     { value: count(s?.gift_count), label: "Total gifts", placeholder: !live },
-    giftsThisMonthStat(s),
+    giftsThisMonthStat(monthly),
     { value: avg, label: "Average gift", placeholder: !live },
     {
       value: storyCount != null ? count(storyCount) : "—",
