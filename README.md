@@ -3,6 +3,7 @@
 The consumer-facing marketing site for the **Giver Army**, a generosity movement.
 Built on StoryBrand: **the giver is the hero, Giver Army is the guide.**
 
+
 > **A Crowd for the Crowdless** — Some people in need have no crowd. Giver Army
 > is a movement of everyday givers who fund them, follow their stories, and share
 > the hope of Jesus through generosity — so no one faces their hardest moment alone.
