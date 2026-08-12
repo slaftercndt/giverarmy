@@ -25,9 +25,10 @@ export const links = {
   // The crowdfunding platform (SEPARATE company — not the giving entity)
   platform: "https://www.givesendgo.com",
 
-  // Policies / legal — these live on the .org donor site
-  privacy: "https://www.givesendgo.org/privacy",
-  terms: "https://www.givesendgo.org/terms",
+  // Policies / legal — Privacy & Terms are published on this site; contact
+  // stays on the .org donor site
+  privacy: "/privacy",
+  terms: "/terms",
   contact: "https://www.givesendgo.org/contact",
 
   // Transparency

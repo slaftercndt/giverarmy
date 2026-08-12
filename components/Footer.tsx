@@ -54,10 +54,18 @@ export function Footer() {
               aria-label="Legal"
               className="flex flex-wrap gap-x-6 gap-y-2 text-xs"
             >
-              <FooterExternal href={links.privacy}>
-                Privacy
-              </FooterExternal>
-              <FooterExternal href={links.terms}>Terms</FooterExternal>
+              <Link
+                href={links.privacy}
+                className="text-cool-400 hover:text-gold-bright"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href={links.terms}
+                className="text-cool-400 hover:text-gold-bright"
+              >
+                Terms of Service
+              </Link>
               <FooterExternal href={links.charity}>
                 GiveSendGo Charities
               </FooterExternal>
