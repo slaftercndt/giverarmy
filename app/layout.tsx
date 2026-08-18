@@ -4,7 +4,6 @@ import "./globals.css";
 import { site } from "@/lib/site";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { MetaPixel } from "@/components/MetaPixel";
 import { GtmNoScript, GtmScript } from "@/components/GoogleTagManager";
 
 const inter = Inter({
@@ -64,7 +63,6 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
-        <MetaPixel />
       </body>
     </html>
   );
